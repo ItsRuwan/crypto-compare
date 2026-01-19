@@ -254,27 +254,47 @@ function CryptoCompareApp() {
 
   if (coinsError) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="bg-red-900/50 text-red-200 px-6 py-4 rounded-lg">
-          Failed to load cryptocurrency data. Please try again later.
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="glass-card p-8 text-center max-w-md">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[rgba(255,42,109,0.2)] flex items-center justify-center">
+            <svg className="w-8 h-8 text-[#ff2a6d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-bold mb-2 neon-text-pink">Connection Failed</h2>
+          <p className="text-[#e0e0ff]/60">
+            Failed to load cryptocurrency data. Please check your connection and try again.
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Crypto Price Comparison</h1>
-          <p className="text-gray-400">
-            Compare cryptocurrency prices at any historical date
-          </p>
+        {/* Header */}
+        <header className="mb-12 animate-slide-up">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-2 h-12 bg-gradient-to-b from-[#05d9e8] via-[#d300c5] to-[#ff2a6d] rounded-full" />
+            <div>
+              <h1 className="text-4xl font-bold tracking-wider">
+                <span className="neon-text-cyan">CRYPTO</span>
+                <span className="text-[#e0e0ff]"> PULSE</span>
+              </h1>
+              <p className="text-[#e0e0ff]/50 text-sm tracking-[0.3em] uppercase mt-1">
+                Historical Price Analysis Terminal
+              </p>
+            </div>
+          </div>
+          <div className="divider-neon" />
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gray-800 rounded-lg p-4">
-            <h2 className="text-lg font-semibold mb-4">Date Selection</h2>
+        {/* Control Panel */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+          {/* Date Selection */}
+          <div className="glass-card p-6 animate-slide-up stagger-1" style={{ opacity: 0 }}>
+            <h2 className="section-header">Temporal Reference</h2>
             <DatePicker
               selectedDate={referenceDate}
               onDateChange={setReferenceDate}
@@ -282,9 +302,13 @@ function CryptoCompareApp() {
             />
           </div>
 
-          <div className="bg-gray-800 rounded-lg p-4">
-            <h2 className="text-lg font-semibold mb-4">
-              Reference Assets ({pinnedAssets.length}/{MAX_PINNED})
+          {/* Reference Assets */}
+          <div className="glass-card p-6 animate-slide-up stagger-2" style={{ opacity: 0 }}>
+            <h2 className="section-header">
+              Reference Assets
+              <span className="ml-auto text-[#ff2a6d] text-xs">
+                {pinnedAssets.length}/{MAX_PINNED}
+              </span>
             </h2>
             <AssetSearch
               coins={coins}
@@ -294,34 +318,42 @@ function CryptoCompareApp() {
               disabled={isLoadingCoins || pinnedAssets.length >= MAX_PINNED}
             />
             {isLoadingCoins && (
-              <p className="text-gray-500 text-sm mt-2">Loading coins...</p>
+              <div className="mt-3 flex items-center gap-2 text-[#05d9e8] text-sm">
+                <div className="w-4 h-4 border-2 border-[#05d9e8] border-t-transparent rounded-full animate-spin" />
+                <span>Syncing market data...</span>
+              </div>
             )}
           </div>
 
-          <div className="bg-gray-800 rounded-lg p-4">
-            <h2 className="text-lg font-semibold mb-4">Comparison Assets</h2>
+          {/* Comparison Assets */}
+          <div className="glass-card p-6 animate-slide-up stagger-3" style={{ opacity: 0 }}>
+            <h2 className="section-header">Comparison Assets</h2>
             <AssetSearch
               coins={coins}
               selectedIds={selectedIds}
               onSelect={handleAddComparison}
-              placeholder="Search to add comparison asset..."
+              placeholder="Search to add comparison..."
               disabled={isLoadingCoins}
             />
           </div>
         </div>
 
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-3">Reference Assets</h2>
-          <PinnedAssets
-            assets={pinnedAssets}
-            onRemove={handleRemoveAsset}
-            onToggleVisibility={handleToggleVisibility}
-          />
-        </div>
+        {/* Pinned Assets Display */}
+        {pinnedAssets.length > 0 && (
+          <div className="mb-8 animate-slide-up stagger-4" style={{ opacity: 0 }}>
+            <h2 className="section-header">Reference Assets</h2>
+            <PinnedAssets
+              assets={pinnedAssets}
+              onRemove={handleRemoveAsset}
+              onToggleVisibility={handleToggleVisibility}
+            />
+          </div>
+        )}
 
+        {/* Comparison Assets Display */}
         {comparisonAssets.length > 0 && (
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-3">Comparison Assets</h2>
+          <div className="mb-8 animate-fade-in">
+            <h2 className="section-header">Comparison Assets</h2>
             <ComparisonAssets
               assets={comparisonAssets}
               onRemove={handleRemoveAsset}
@@ -330,91 +362,76 @@ function CryptoCompareApp() {
           </div>
         )}
 
+        {/* Loading Indicator */}
         {isLoadingPrices && (
-          <div className="mb-4 p-4 bg-blue-900/30 border border-blue-700 rounded-lg">
-            <div className="flex items-center gap-2 text-blue-400">
-              <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  fill="none"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-              <span className="font-medium">Loading price data...</span>
+          <div className="mb-8 glass-card p-6 animate-fade-in">
+            <div className="flex items-center gap-4">
+              <div className="relative w-12 h-12">
+                <div className="absolute inset-0 border-2 border-[#05d9e8]/30 rounded-full" />
+                <div className="absolute inset-0 border-2 border-[#05d9e8] border-t-transparent rounded-full animate-spin" />
+                <div className="absolute inset-2 border-2 border-[#ff2a6d] border-b-transparent rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }} />
+              </div>
+              <div>
+                <h3 className="font-bold text-[#05d9e8]">Fetching Price Data</h3>
+                <p className="text-sm text-[#e0e0ff]/50">
+                  Synchronizing with CoinGecko API... Each asset takes ~12 seconds due to rate limits.
+                </p>
+              </div>
             </div>
-            <p className="text-sm text-gray-400 mt-2">
-              Using CoinGecko free API with rate limits. Each coin takes ~12 seconds to load.
-              Check the browser console for progress.
-            </p>
           </div>
         )}
 
-        <div className="mb-8">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-3">
-            <h2 className="text-lg font-semibold">
-              {chartMode === 'price' ? 'Price' : 'Market Cap'} Comparison Chart
+        {/* Chart Section */}
+        <div className="mb-12">
+          {/* Chart Controls */}
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div>
+              <h2 className="text-2xl font-bold">
+                {chartMode === 'price' ? 'Price' : 'Market Cap'} Analysis
+              </h2>
               {isNormalized && (
-                <span className="text-sm font-normal text-gray-400 ml-2">
-                  (Normalized to 100 at reference date)
-                </span>
+                <p className="text-sm text-[#e0e0ff]/50 mt-1">
+                  Normalized to index 100 at reference date
+                </p>
               )}
-            </h2>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1">
+            </div>
+
+            <div className="flex items-center gap-3">
+              {/* Normalization Toggle */}
+              <div className="flex items-center gap-1 p-1 rounded-lg bg-[rgba(10,0,20,0.5)] border border-[rgba(5,217,232,0.2)]">
                 <button
                   onClick={() => setIsNormalized(true)}
-                  className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
-                    isNormalized
-                      ? 'bg-green-600 text-white'
-                      : 'text-gray-400 hover:text-white'
-                  }`}
+                  className={`btn-neon px-4 py-2 text-xs ${isNormalized ? 'btn-neon-active' : 'btn-neon-cyan'}`}
                 >
                   Normalized
                 </button>
                 <button
                   onClick={() => setIsNormalized(false)}
-                  className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
-                    !isNormalized
-                      ? 'bg-green-600 text-white'
-                      : 'text-gray-400 hover:text-white'
-                  }`}
+                  className={`btn-neon px-4 py-2 text-xs ${!isNormalized ? 'btn-neon-active' : 'btn-neon-cyan'}`}
                 >
                   Actual $
                 </button>
               </div>
-              <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1">
+
+              {/* Chart Mode Toggle */}
+              <div className="flex items-center gap-1 p-1 rounded-lg bg-[rgba(10,0,20,0.5)] border border-[rgba(255,42,109,0.2)]">
                 <button
                   onClick={() => setChartMode('price')}
-                  className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
-                    chartMode === 'price'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-400 hover:text-white'
-                  }`}
+                  className={`btn-neon px-4 py-2 text-xs ${chartMode === 'price' ? 'btn-neon-active' : 'btn-neon-pink'}`}
                 >
                   Price
                 </button>
                 <button
                   onClick={() => setChartMode('marketCap')}
-                  className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
-                    chartMode === 'marketCap'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-400 hover:text-white'
-                  }`}
+                  className={`btn-neon px-4 py-2 text-xs ${chartMode === 'marketCap' ? 'btn-neon-active' : 'btn-neon-pink'}`}
                 >
                   Market Cap
                 </button>
               </div>
             </div>
           </div>
+
+          {/* Chart */}
           <PriceChart
             assets={assetsWithPrices}
             priceData={displayChartData}
@@ -423,10 +440,18 @@ function CryptoCompareApp() {
           />
         </div>
 
-        <div>
-          <h2 className="text-lg font-semibold mb-3">Price Comparison Table</h2>
+        {/* Data Table */}
+        <div className="mb-8">
+          <h2 className="section-header mb-6">Price Matrix</h2>
           <PriceTable assets={assetsWithPrices} />
         </div>
+
+        {/* Footer */}
+        <footer className="text-center py-8 border-t border-[rgba(5,217,232,0.1)]">
+          <p className="text-[#e0e0ff]/30 text-sm tracking-wider">
+            CRYPTO PULSE // DATA FROM COINGECKO API
+          </p>
+        </footer>
       </div>
     </div>
   );

@@ -1,15 +1,15 @@
-// Chart colors for different assets
+// Neon Pulse Chart Colors - Cyberpunk palette
 export const CHART_COLORS = [
-  '#3b82f6', // blue
-  '#10b981', // emerald
-  '#f59e0b', // amber
-  '#ef4444', // red
-  '#8b5cf6', // violet
-  '#ec4899', // pink
-  '#06b6d4', // cyan
-  '#84cc16', // lime
-  '#f97316', // orange
-  '#6366f1', // indigo
+  '#05d9e8', // neon cyan (primary)
+  '#ff2a6d', // hot pink
+  '#d300c5', // magenta
+  '#00ff88', // neon green
+  '#ffb800', // amber/gold
+  '#7b2cbf', // electric purple
+  '#00d4ff', // light cyan
+  '#ff6b6b', // coral
+  '#9d4edd', // violet
+  '#00ffcc', // turquoise
 ];
 
 export function getColor(index: number): string {
@@ -18,7 +18,7 @@ export function getColor(index: number): string {
 
 // Format price with appropriate decimal places
 export function formatPrice(price: number | null | undefined): string {
-  if (price == null) return 'N/A';
+  if (price == null) return '---';
 
   if (price >= 1000) {
     return `$${price.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
@@ -44,7 +44,7 @@ export function calculateChange(
 
 // Format percentage with sign
 export function formatPercentage(change: number | null): string {
-  if (change == null) return 'N/A';
+  if (change == null) return '---';
   const sign = change >= 0 ? '+' : '';
   return `${sign}${change.toFixed(2)}%`;
 }

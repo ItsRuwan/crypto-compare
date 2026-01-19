@@ -34,27 +34,47 @@ export function PriceChart({ assets, priceData, isNormalized, chartMode = 'price
 
   if (assets.length === 0) {
     return (
-      <div className="h-[400px] bg-gray-800 rounded-lg flex items-center justify-center text-gray-500">
-        Add assets to see price comparison chart
+      <div className="chart-container h-[450px] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#05d9e8]/10 to-[#ff2a6d]/10 flex items-center justify-center">
+            <svg className="w-10 h-10 text-[#05d9e8]/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+            </svg>
+          </div>
+          <p className="text-[#e0e0ff]/40 text-lg">Add assets to visualize price data</p>
+        </div>
       </div>
     );
   }
 
   if (visibleAssets.length === 0) {
     return (
-      <div className="h-[400px] bg-gray-800 rounded-lg flex items-center justify-center text-gray-500">
-        Toggle asset visibility to show on chart
+      <div className="chart-container h-[450px] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#d300c5]/10 to-[#ff2a6d]/10 flex items-center justify-center">
+            <svg className="w-10 h-10 text-[#d300c5]/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+            </svg>
+          </div>
+          <p className="text-[#e0e0ff]/40 text-lg">Toggle asset visibility to show chart</p>
+        </div>
       </div>
     );
   }
 
   if (assetsWithData.length === 0) {
     return (
-      <div className="h-[400px] bg-gray-800 rounded-lg flex flex-col items-center justify-center text-gray-500">
-        <div className="animate-pulse mb-2">Loading chart data...</div>
-        <div className="text-sm">
-          Waiting for: {assetsWaitingForData.map(a => a.coin.symbol.toUpperCase()).join(', ')}
+      <div className="chart-container h-[450px] flex flex-col items-center justify-center">
+        <div className="relative w-24 h-24 mb-6">
+          <div className="absolute inset-0 border-2 border-[#05d9e8]/20 rounded-full" />
+          <div className="absolute inset-0 border-2 border-[#05d9e8] border-t-transparent rounded-full animate-spin" />
+          <div className="absolute inset-3 border-2 border-[#ff2a6d]/50 border-b-transparent rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }} />
+          <div className="absolute inset-6 border-2 border-[#d300c5]/30 border-t-transparent rounded-full animate-spin" style={{ animationDuration: '2s' }} />
         </div>
+        <p className="text-[#05d9e8] text-lg font-semibold mb-2">Synchronizing Data</p>
+        <p className="text-[#e0e0ff]/40 text-sm">
+          Loading: {assetsWaitingForData.map(a => a.coin.symbol.toUpperCase()).join(', ')}
+        </p>
       </div>
     );
   }
@@ -115,26 +135,41 @@ export function PriceChart({ assets, priceData, isNormalized, chartMode = 'price
   });
 
   return (
-    <div className="bg-gray-800 rounded-lg p-4">
+    <div className="chart-container">
       {assetsWaitingForData.length > 0 && (
-        <div className="mb-2 text-sm text-yellow-500">
-          Loading data for: {assetsWaitingForData.map(a => a.coin.symbol.toUpperCase()).join(', ')}
+        <div className="mb-4 flex items-center gap-2 text-sm">
+          <div className="w-3 h-3 border-2 border-[#ff2a6d] border-t-transparent rounded-full animate-spin" />
+          <span className="text-[#ff2a6d]">
+            Loading: {assetsWaitingForData.map(a => a.coin.symbol.toUpperCase()).join(', ')}
+          </span>
         </div>
       )}
       <div className="h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+            <defs>
+              {assetsWithData.map((asset) => (
+                <linearGradient key={`gradient-${asset.coin.id}`} id={`gradient-${asset.coin.id}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={asset.color} stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor={asset.color} stopOpacity={0}/>
+                </linearGradient>
+              ))}
+            </defs>
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="rgba(5, 217, 232, 0.1)"
+              vertical={false}
+            />
             <XAxis
               dataKey="date"
-              tick={{ fill: '#9ca3af', fontSize: 12 }}
-              tickLine={{ stroke: '#4b5563' }}
-              axisLine={{ stroke: '#4b5563' }}
+              tick={{ fill: '#e0e0ff', fontSize: 11, opacity: 0.5 }}
+              tickLine={{ stroke: 'rgba(5, 217, 232, 0.2)' }}
+              axisLine={{ stroke: 'rgba(5, 217, 232, 0.2)' }}
             />
             <YAxis
-              tick={{ fill: '#9ca3af', fontSize: 12 }}
-              tickLine={{ stroke: '#4b5563' }}
-              axisLine={{ stroke: '#4b5563' }}
+              tick={{ fill: '#e0e0ff', fontSize: 11, opacity: 0.5 }}
+              tickLine={{ stroke: 'rgba(5, 217, 232, 0.2)' }}
+              axisLine={{ stroke: 'rgba(5, 217, 232, 0.2)' }}
               tickFormatter={(value) => {
                 if (isNormalized) {
                   return value.toFixed(0);
@@ -150,11 +185,14 @@ export function PriceChart({ assets, priceData, isNormalized, chartMode = 'price
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#1f2937',
-                border: '1px solid #374151',
-                borderRadius: '8px',
+                backgroundColor: 'rgba(10, 0, 20, 0.95)',
+                border: '1px solid rgba(5, 217, 232, 0.3)',
+                borderRadius: '12px',
+                boxShadow: '0 0 30px rgba(5, 217, 232, 0.2)',
+                padding: '12px 16px',
               }}
-              labelStyle={{ color: '#fff' }}
+              labelStyle={{ color: '#05d9e8', fontWeight: 'bold', marginBottom: '8px' }}
+              itemStyle={{ padding: '2px 0' }}
               formatter={(value: number, name: string) => {
                 const asset = assets.find((a) => a.coin.id === name);
                 const displayName = asset ? asset.coin.symbol.toUpperCase() : name;
@@ -181,8 +219,9 @@ export function PriceChart({ assets, priceData, isNormalized, chartMode = 'price
             <Legend
               formatter={(value: string) => {
                 const asset = assets.find((a) => a.coin.id === value);
-                return asset ? asset.coin.symbol.toUpperCase() : value;
+                return <span style={{ color: '#e0e0ff', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{asset ? asset.coin.symbol : value}</span>;
               }}
+              wrapperStyle={{ paddingTop: '20px' }}
             />
 
             {assetsWithData.map((asset) => (
@@ -194,7 +233,13 @@ export function PriceChart({ assets, priceData, isNormalized, chartMode = 'price
                 strokeWidth={asset.isPinned ? 2.5 : 1.5}
                 strokeDasharray={asset.isPinned ? undefined : '5 5'}
                 dot={false}
-                activeDot={{ r: 4, fill: asset.color }}
+                activeDot={{
+                  r: 6,
+                  fill: asset.color,
+                  stroke: '#0a0014',
+                  strokeWidth: 2,
+                  style: { filter: `drop-shadow(0 0 8px ${asset.color})` }
+                }}
                 connectNulls
               />
             ))}
@@ -202,9 +247,10 @@ export function PriceChart({ assets, priceData, isNormalized, chartMode = 'price
             {chartData.length > 50 && (
               <Brush
                 dataKey="date"
-                height={30}
-                stroke="#4b5563"
-                fill="#1f2937"
+                height={40}
+                stroke="rgba(5, 217, 232, 0.5)"
+                fill="rgba(10, 0, 20, 0.8)"
+                travellerWidth={10}
               />
             )}
           </LineChart>
