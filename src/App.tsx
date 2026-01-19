@@ -280,19 +280,6 @@ function CryptoCompareApp() {
               onDateChange={setReferenceDate}
               label="Historical Date"
             />
-            <div className="mt-4">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={isNormalized}
-                  onChange={(e) => setIsNormalized(e.target.checked)}
-                  className="w-4 h-4 rounded bg-gray-700 border-gray-600 text-blue-500 focus:ring-blue-500 focus:ring-offset-gray-900"
-                />
-                <span className="text-sm text-gray-300">
-                  Normalize prices (index to 100)
-                </span>
-              </label>
-            </div>
           </div>
 
           <div className="bg-gray-800 rounded-lg p-4">
@@ -381,27 +368,51 @@ function CryptoCompareApp() {
                 </span>
               )}
             </h2>
-            <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1">
-              <button
-                onClick={() => setChartMode('price')}
-                className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
-                  chartMode === 'price'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                Price
-              </button>
-              <button
-                onClick={() => setChartMode('marketCap')}
-                className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
-                  chartMode === 'marketCap'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                Market Cap
-              </button>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1">
+                <button
+                  onClick={() => setIsNormalized(true)}
+                  className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+                    isNormalized
+                      ? 'bg-green-600 text-white'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Normalized
+                </button>
+                <button
+                  onClick={() => setIsNormalized(false)}
+                  className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+                    !isNormalized
+                      ? 'bg-green-600 text-white'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Actual $
+                </button>
+              </div>
+              <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1">
+                <button
+                  onClick={() => setChartMode('price')}
+                  className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+                    chartMode === 'price'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Price
+                </button>
+                <button
+                  onClick={() => setChartMode('marketCap')}
+                  className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+                    chartMode === 'marketCap'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Market Cap
+                </button>
+              </div>
             </div>
           </div>
           <PriceChart
